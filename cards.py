@@ -1,5 +1,6 @@
 from flask import Flask, Response, request
 from pymongo import MongoClient
+import json
 from bson import json_util
 
 app = Flask(__name__)
@@ -19,5 +20,24 @@ def index():
 
 
     resp = Response(words_json)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+
+    client = MongoClient()
+    db = client.test
+    cards_collection = db.cards
+
+    word = {
+        "original_word": request.form['original_word'],
+        "translated_word": request.form['translated_word']
+    }
+
+    inserted_word = cards_collection.insert_one(word)
+
+    resp = Response(json.dumps({'id': str(inserted_word.inserted_id)}))
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp

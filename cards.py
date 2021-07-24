@@ -1,5 +1,5 @@
 from flask import Flask, Response, request
-from pymongo import MongoClient
+from db import db
 import json
 from bson import json_util
 
@@ -8,8 +8,6 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
-    client = MongoClient()
-    db = client.test
     cards_collection = db.cards
 
     words_cursor = cards_collection.find({})
@@ -27,8 +25,6 @@ def index():
 @app.route('/add', methods=['GET', 'POST'])
 def add():
 
-    client = MongoClient()
-    db = client.test
     cards_collection = db.cards
 
     word = {

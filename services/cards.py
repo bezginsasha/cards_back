@@ -1,5 +1,6 @@
 from db import db
 from bson import json_util
+from bson.objectid import ObjectId
 
 cards_collection = db.cards
 
@@ -30,3 +31,7 @@ def insert_card(original_word, translated_word):
 	}
 	insertedCard = cards_collection.insert_one(card)
 	return str(insertedCard.inserted_id)
+
+
+def delete_card(id):
+	cards_collection.delete_one({'_id': ObjectId(id)})

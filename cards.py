@@ -1,7 +1,5 @@
 from flask import Flask, Response, request
-from db import db
 import json
-from bson import json_util
 from services.cards import get_all_cards, insert_card, delete_card
 
 app = Flask(__name__)

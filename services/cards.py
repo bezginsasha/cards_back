@@ -21,3 +21,12 @@ def get_all_cards():
 	all_cards = list(cards_cursor)
 	all_cards = [get_clear_card_item(card) for card in all_cards]
 	return json_util.dumps(all_cards)
+
+
+def insert_card(original_word, translated_word):
+	card = {
+		'original_word': original_word,
+		'translated_word': translated_word
+	}
+	insertedCard = cards_collection.insert_one(card)
+	return str(insertedCard.inserted_id)

@@ -6,7 +6,7 @@ from services.cards import get_all_cards
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/api/get_all', methods=['GET', 'POST'])
 def index():
 	cards = get_all_cards()
 	resp = Response(cards)
@@ -14,7 +14,7 @@ def index():
 	return resp
 
 
-@app.route('/add', methods=['GET', 'POST'])
+@app.route('/api/add', methods=['GET', 'POST'])
 def add():
 
 	cards_collection = db.cards

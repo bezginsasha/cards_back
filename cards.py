@@ -50,6 +50,27 @@ def update_card():
 	return resp
 
 
+@app.route('/api/piles/get_all', methods=['GET'])
+def get_all():
+	piles = pilesService.get_all_piles()
+	resp = Response(piles)
+	resp.headers['Access-Control-Allow-Origin'] = '*'
+	return resp
+
+
+@app.route('/api/piles/add', methods=['POST'])
+def insert_pile():
+	pilesService.insert_pile(request.form['pile_name'])
+
+	resp = Response(json.dumps({'result': 'ok'}))
+	resp.headers['Access-Control-Allow-Origin'] = '*'
+	return resp
+
+
+@app.route('/api/piles/delete', methods=['POST'])
+def delete_pile():
+	pilesService.delete_pile(request.form['pile_name'])
+
 	resp = Response(json.dumps({'result': 'ok'}))
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp

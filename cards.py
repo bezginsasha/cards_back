@@ -2,8 +2,10 @@ from flask import Flask, Response, request
 import json
 from services.cards import CardsService
 from services.piles import PilesService
+from auth import bp
 
 app = Flask(__name__)
+app.register_blueprint(bp)
 
 cardsService = CardsService()
 pilesService = PilesService()

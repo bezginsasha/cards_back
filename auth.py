@@ -24,5 +24,7 @@ def login():
 	login_result = login_service(username, password)
 
 	resp = Response(json.dumps({'result': login_result}))
+	if login_result == AUTH_RESULT['ok']:
+		resp.set_cookie('username', username)
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp

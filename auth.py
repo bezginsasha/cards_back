@@ -1,6 +1,5 @@
 import json
-from flask import Response
-from flask import Blueprint, request
+from flask import Response, Blueprint, request
 from services.auth import register_service, login_service
 from constants import AUTH_RESULT
 

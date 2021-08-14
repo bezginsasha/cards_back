@@ -4,10 +4,10 @@ from services.auth import register_service, login_service
 from utils.constants import AUTH_RESULT
 from utils.decorators import standard_headers_with_response_object
 
-bp = Blueprint('auth', __name__, url_prefix='/api/auth')
+auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 
-@bp.route('/register', methods=('POST',))
+@auth_bp.route('/register', methods=('POST',))
 @standard_headers_with_response_object
 def register():
 	username = request.form['username']
@@ -20,7 +20,7 @@ def register():
 	return resp
 
 
-@bp.route('/login', methods=('POST',))
+@auth_bp.route('/login', methods=('POST',))
 @standard_headers_with_response_object
 def login():
 	username = request.form['username']

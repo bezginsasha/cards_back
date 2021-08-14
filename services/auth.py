@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import db
-from constants import AUTH_RESULT
+from utils.constants import AUTH_RESULT
 
 cards_collection = db.cards
 

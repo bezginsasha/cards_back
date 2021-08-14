@@ -1,7 +1,7 @@
 import json
 from flask import Response, Blueprint, request
 from services.auth import register_service, login_service
-from constants import AUTH_RESULT
+from utils.constants import AUTH_RESULT
 
 bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 

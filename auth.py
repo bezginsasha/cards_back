@@ -15,6 +15,8 @@ def register():
 	register_result = register_service(username, password)
 
 	resp = Response(json.dumps({'result': register_result}))
+	if register_result == AUTH_RESULT['ok']:
+		set_username_cookie(resp, username)
 	return resp
 
 
@@ -27,5 +29,13 @@ def login():
 
 	resp = Response(json.dumps({'result': login_result}))
 	if login_result == AUTH_RESULT['ok']:
-		resp.set_cookie('username', username)
+		set_username_cookie(resp, username)
 	return resp
+
+
+def set_username_cookie(resp, username):
+	resp.set_cookie(
+		key='username',
+		value=username,
+		samesite='Strict'
+	)

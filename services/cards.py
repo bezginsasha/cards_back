@@ -1,5 +1,4 @@
 from db import db
-from bson import json_util
 from bson.objectid import ObjectId
 
 cards_collection = db.cards
@@ -22,7 +21,7 @@ def get_all_cards_service():
 	cards_cursor = cards_collection.find({"original_word": {'$exists': True}})
 	all_cards = list(cards_cursor)
 	all_cards = [get_clear_card_item(card) for card in all_cards]
-	return json_util.dumps(all_cards)
+	return all_cards
 
 
 def insert_card_service(original_word, translated_word):

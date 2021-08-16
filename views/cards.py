@@ -1,13 +1,14 @@
 from flask import Blueprint, request
 from bson import json_util
 from services.cards import get_all_cards_service, insert_card_service, update_card_service, delete_card_service
-from utils.decorators import standard_headers_with_str_response
+from utils.decorators import standard_headers_with_str_response, require_auth
 from humps import camelize
 
 cards_bp = Blueprint('cards', __name__, url_prefix='/api/cards')
 
 
 @cards_bp.route('/get_all', methods=['GET', 'POST'])
+@require_auth
 @standard_headers_with_str_response
 def get_all_cards():
 	cards = get_all_cards_service()
@@ -15,6 +16,7 @@ def get_all_cards():
 
 
 @cards_bp.route('/add', methods=['GET', 'POST'])
+@require_auth
 @standard_headers_with_str_response
 def add_card():
 	original_word = request.form[camelize('original_word')]
@@ -25,6 +27,7 @@ def add_card():
 
 
 @cards_bp.route('/delete', methods=['POST'])
+@require_auth
 @standard_headers_with_str_response
 def delete_card():
 	card_id = request.form['id']
@@ -33,6 +36,7 @@ def delete_card():
 
 
 @cards_bp.route('/update', methods=['POST'])
+@require_auth
 @standard_headers_with_str_response
 def update_card():
 	update_card_service(

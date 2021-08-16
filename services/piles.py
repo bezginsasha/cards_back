@@ -1,5 +1,4 @@
 from db import db
-from bson import json_util
 
 cards_collection = db.cards
 

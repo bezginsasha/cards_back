@@ -20,8 +20,9 @@ def get_all():
 @require_auth
 @standard_headers_with_str_response
 def insert_pile():
+	pile_name = request.form[camelize('pile_name')]
 	username = request.cookies['username']
-	insert_pile_service(request.form[camelize('pile_name')], username)
+	insert_pile_service(pile_name, username)
 	return json_util.dumps({'result': 'ok'})
 
 
@@ -29,6 +30,7 @@ def insert_pile():
 @require_auth
 @standard_headers_with_str_response
 def delete_pile():
+	pile_name = request.form[camelize('pile_name')]
 	username = request.cookies['username']
-	delete_pile_service(request.form[camelize('pile_name')], username)
+	delete_pile_service(pile_name, username)
 	return json_util.dumps({'result': 'ok'})

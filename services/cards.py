@@ -24,10 +24,12 @@ def get_all_cards_service():
 	return all_cards
 
 
-def insert_card_service(original_word, translated_word):
+def insert_card_service(original_word, translated_word, username):
 	card = {
 		'original_word': original_word,
-		'translated_word': translated_word
+		'translated_word': translated_word,
+		'username': username,
+		'pile_name': 'default'
 	}
 	inserted_card = cards_collection.insert_one(card)
 	return str(inserted_card.inserted_id)

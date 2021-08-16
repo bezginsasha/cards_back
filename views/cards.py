@@ -19,7 +19,8 @@ def get_all_cards():
 def add_card():
 	original_word = request.form[camelize('original_word')]
 	translated_word = request.form[camelize('translated_word')]
-	inserted_id = insert_card_service(original_word, translated_word)
+	username = request.cookies['username']
+	inserted_id = insert_card_service(original_word, translated_word, username)
 	return json_util.dumps({'id': inserted_id})
 
 

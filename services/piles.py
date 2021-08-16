@@ -24,4 +24,15 @@ def delete_pile_service(pile_name, username):
 		'original_word': {'$exists': False},
 		'username': username
 	})
+	cards_collection.update_many(
+		{
+			'pile_name': pile_name,
+			'username': username
+		},
+		{
+			'$set': {
+				'pile_name': 'default'
+			}
+		}
+	)
 	return {'result': 'ok'}

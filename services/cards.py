@@ -17,8 +17,11 @@ def get_clear_card_item(card):
 	return card
 
 
-def get_all_cards_service():
-	cards_cursor = cards_collection.find({"original_word": {'$exists': True}})
+def get_all_cards_service(username):
+	cards_cursor = cards_collection.find({
+		'original_word': {'$exists': True},
+		'username': username
+	})
 	all_cards = list(cards_cursor)
 	all_cards = [get_clear_card_item(card) for card in all_cards]
 	return all_cards

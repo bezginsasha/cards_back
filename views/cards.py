@@ -11,7 +11,8 @@ cards_bp = Blueprint('cards', __name__, url_prefix='/api/cards')
 @require_auth
 @standard_headers_with_str_response
 def get_all_cards():
-	cards = get_all_cards_service()
+	username = request.cookies['username']
+	cards = get_all_cards_service(username)
 	return json_util.dumps(camelize(cards))
 
 

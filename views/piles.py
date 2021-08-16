@@ -11,7 +11,8 @@ piles_bp = Blueprint('piles', __name__, url_prefix='/api/piles')
 @require_auth
 @standard_headers_with_str_response
 def get_all():
-	piles = get_all_piles_service()
+	username = request.cookies['username']
+	piles = get_all_piles_service(username)
 	return json_util.dumps(camelize(piles))
 
 
@@ -19,7 +20,8 @@ def get_all():
 @require_auth
 @standard_headers_with_str_response
 def insert_pile():
-	insert_pile_service(request.form[camelize('pile_name')])
+	username = request.cookies['username']
+	insert_pile_service(request.form[camelize('pile_name')], username)
 	return json_util.dumps({'result': 'ok'})
 
 
@@ -27,5 +29,6 @@ def insert_pile():
 @require_auth
 @standard_headers_with_str_response
 def delete_pile():
-	delete_pile_service(request.form[camelize('pile_name')])
+	username = request.cookies['username']
+	delete_pile_service(request.form[camelize('pile_name')], username)
 	return json_util.dumps({'result': 'ok'})

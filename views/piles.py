@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from bson import json_util
-from services.piles import get_all_piles_service, insert_pile_service, delete_pile_service
+from services.piles import get_all_piles_service, insert_pile_service, delete_pile_service, update_pile_service
 from utils.decorators import standard_headers_with_str_response, require_auth
 from humps import camelize
 
@@ -23,6 +23,17 @@ def insert_pile():
 	pile_name = request.form[camelize('pile_name')]
 	username = request.cookies['username']
 	insert_pile_service(pile_name, username)
+	return json_util.dumps({'result': 'ok'})
+
+
+@piles_bp.route('/update', methods=['POST'])
+@require_auth
+@standard_headers_with_str_response
+def update_pile():
+	old_pile_name = request.form[camelize('old_pile_name')]
+	new_pile_name = request.form[camelize('new_pile_name')]
+	username = request.cookies['username']
+	update_pile_service(old_pile_name, new_pile_name, username)
 	return json_util.dumps({'result': 'ok'})
 
 

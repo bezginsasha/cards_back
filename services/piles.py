@@ -18,6 +18,21 @@ def insert_pile_service(pile_name, username):
 	return {'result': 'ok'}
 
 
+def update_pile_service(old_pile_name, new_pile_name, username):
+	cards_collection.update_many(
+		{
+			'pile_name': old_pile_name,
+			'username': username
+		},
+		{
+			'$set': {
+				'pile_name': new_pile_name
+			}
+		}
+	)
+	return {'result': 'ok'}
+
+
 def delete_pile_service(pile_name, username):
 	cards_collection.delete_one({
 		'pile_name': pile_name,

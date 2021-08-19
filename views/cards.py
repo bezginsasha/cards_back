@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from bson import json_util
-from services.cards import get_all_cards_service, insert_card_service, update_card_service, delete_card_service
+from services.cards import get_all_cards_service, insert_card_service, update_card_service, delete_card_service, move_card_to_pile_service
 from utils.decorators import standard_headers_with_str_response, require_auth
 from humps import camelize
 
@@ -45,4 +45,14 @@ def update_card():
 		request.form[camelize('original_word')],
 		request.form[camelize('translated_word')]
 	)
+	return json_util.dumps({'result': 'ok'})
+
+
+@cards_bp.route('/move', methods=['POST'])
+@require_auth
+@standard_headers_with_str_response
+def move_card_to_pile():
+	card_id = request.form[camelize('card_id')]
+	pile_name = request.form[camelize('pile_name')]
+	move_card_to_pile_service(card_id, pile_name)
 	return json_util.dumps({'result': 'ok'})

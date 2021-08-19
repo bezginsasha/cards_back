@@ -51,3 +51,12 @@ def update_card_service(id, original_word, translated_word):
 
 def delete_card_service(id):
 	cards_collection.delete_one({'_id': ObjectId(id)})
+
+
+def move_card_to_pile_service(card_id, pile_name):
+	cards_collection.update_one(
+		{'_id': ObjectId(card_id)},
+		{
+			'$set': {'pile_name': pile_name}
+		}
+	)

@@ -5,7 +5,7 @@ from utils.constants import AUTH_RESULT
 cards_collection = db.cards
 
 
-def register_service(username, password):
+def register(username, password):
     found_users = cards_collection.find({'username': username})
     if found_users.count() == 0:
         cards_collection.insert_one({
@@ -16,7 +16,7 @@ def register_service(username, password):
     return AUTH_RESULT['username_exists']
 
 
-def login_service(username, password):
+def login(username, password):
     found_user_cursor = cards_collection.find({
         'username': username,
         'password': {'$exists': True}

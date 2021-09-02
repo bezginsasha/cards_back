@@ -17,7 +17,7 @@ def get_clear_card_item(card):
     return card
 
 
-def get_all_cards_service(username):
+def get_all_cards(username):
     cards_cursor = cards_collection.find({
         'original_word': {'$exists': True},
         'username': username
@@ -27,7 +27,7 @@ def get_all_cards_service(username):
     return all_cards
 
 
-def insert_card_service(original_word, translated_word, username):
+def insert_card(original_word, translated_word, username):
     card = {
         'original_word': original_word,
         'translated_word': translated_word,
@@ -38,7 +38,7 @@ def insert_card_service(original_word, translated_word, username):
     return str(inserted_card.inserted_id)
 
 
-def update_card_service(id, original_word, translated_word):
+def update_card(id, original_word, translated_word):
     id = {'_id': ObjectId(id)}
     card = {
         '$set': {
@@ -49,11 +49,11 @@ def update_card_service(id, original_word, translated_word):
     cards_collection.update_one(id, card)
 
 
-def delete_card_service(id):
+def delete_card(id):
     cards_collection.delete_one({'_id': ObjectId(id)})
 
 
-def move_card_to_pile_service(card_id, pile_name):
+def move_card_to_pile(card_id, pile_name):
     cards_collection.update_one(
         {'_id': ObjectId(card_id)},
         {

@@ -1,8 +1,9 @@
 from flask import Blueprint, request
 from bson import json_util
+from humps import camelize
+
 from services import cards as cards_service
 from utils.decorators import standard_headers_with_str_response, require_auth
-from humps import camelize
 
 cards_bp = Blueprint('cards', __name__, url_prefix='/api/cards')
 
@@ -43,7 +44,7 @@ def update_card():
     cards_service.update_card(
         request.form['id'],
         request.form[camelize('original_word')],
-        request.form[camelize('translated_word')]
+        request.form[camelize('translated_word')],
     )
     return json_util.dumps({'result': 'ok'})
 

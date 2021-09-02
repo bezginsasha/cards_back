@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from db import db
+
 from utils.constants import AUTH_RESULT
+from db import db
 
 cards_collection = db.cards
 
@@ -10,7 +11,7 @@ def register(username, password):
     if found_users.count() == 0:
         cards_collection.insert_one({
             'username': username,
-            'password': generate_password_hash(password)
+            'password': generate_password_hash(password),
         })
         return AUTH_RESULT['ok']
     return AUTH_RESULT['username_exists']
@@ -19,7 +20,7 @@ def register(username, password):
 def login(username, password):
     found_user_cursor = cards_collection.find({
         'username': username,
-        'password': {'$exists': True}
+        'password': {'$exists': True},
     })
     if found_user_cursor.count() == 0:
         return AUTH_RESULT['username_not_found']

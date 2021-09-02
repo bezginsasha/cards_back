@@ -6,14 +6,14 @@ cards_collection = db.cards
 def get_all_piles(username):
     return cards_collection.distinct(
         'pile_name',
-        {'username': username}
+        {'username': username},
     )
 
 
 def insert_pile(pile_name, username):
     cards_collection.insert_one({
         'pile_name': pile_name,
-        'username': username
+        'username': username,
     })
     return {'result': 'ok'}
 
@@ -22,11 +22,11 @@ def update_pile(old_pile_name, new_pile_name, username):
     cards_collection.update_many(
         {
             'pile_name': old_pile_name,
-            'username': username
+            'username': username,
         },
         {
             '$set': {
-                'pile_name': new_pile_name
+                'pile_name': new_pile_name,
             }
         }
     )
@@ -42,11 +42,11 @@ def delete_pile(pile_name, username):
     cards_collection.update_many(
         {
             'pile_name': pile_name,
-            'username': username
+            'username': username,
         },
         {
             '$set': {
-                'pile_name': 'default'
+                'pile_name': 'default',
             }
         }
     )

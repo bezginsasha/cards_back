@@ -1,8 +1,10 @@
 import json
+
 from flask import Response, Blueprint, request
-from services import auth as auth_service
+
 from utils.constants import AUTH_RESULT
 from utils.decorators import standard_headers_with_response_object
+from services import auth as auth_service
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 

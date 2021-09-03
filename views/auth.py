@@ -3,13 +3,14 @@ import json
 from flask import Response, Blueprint, request
 
 from utils.constants import AUTH_RESULT
-from utils.decorators import standard_headers_with_response_object
+from utils.decorators import standard_headers_with_response_object, logger
 from services import auth as auth_service
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 
 @auth_bp.route('/register', methods=('POST',))
+@logger
 @standard_headers_with_response_object
 def register():
     username = request.form['username']
@@ -23,6 +24,7 @@ def register():
 
 
 @auth_bp.route('/login', methods=('POST',))
+@logger
 @standard_headers_with_response_object
 def login():
     username = request.form['username']

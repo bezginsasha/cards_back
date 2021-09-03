@@ -3,12 +3,13 @@ from bson import json_util
 from humps import camelize
 
 from services import cards as cards_service
-from utils.decorators import standard_headers_with_str_response, require_auth
+from utils.decorators import standard_headers_with_str_response, require_auth, logger
 
 cards_bp = Blueprint('cards', __name__, url_prefix='/api/cards')
 
 
 @cards_bp.route('/get_all', methods=['GET', 'POST'])
+@logger
 @require_auth
 @standard_headers_with_str_response
 def get_all_cards():
@@ -18,6 +19,7 @@ def get_all_cards():
 
 
 @cards_bp.route('/add', methods=['GET', 'POST'])
+@logger
 @require_auth
 @standard_headers_with_str_response
 def add_card():
@@ -29,6 +31,7 @@ def add_card():
 
 
 @cards_bp.route('/delete', methods=['POST'])
+@logger
 @require_auth
 @standard_headers_with_str_response
 def delete_card():
@@ -38,6 +41,7 @@ def delete_card():
 
 
 @cards_bp.route('/update', methods=['POST'])
+@logger
 @require_auth
 @standard_headers_with_str_response
 def update_card():
@@ -50,6 +54,7 @@ def update_card():
 
 
 @cards_bp.route('/move', methods=['POST'])
+@logger
 @require_auth
 @standard_headers_with_str_response
 def move_card_to_pile():

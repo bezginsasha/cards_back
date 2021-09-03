@@ -3,12 +3,13 @@ from bson import json_util
 from humps import camelize
 
 from services import piles as piles_service
-from utils.decorators import standard_headers_with_str_response, require_auth
+from utils.decorators import standard_headers_with_str_response, require_auth, logger
 
 piles_bp = Blueprint('piles', __name__, url_prefix='/api/piles')
 
 
 @piles_bp.route('/get_all', methods=['GET'])
+@logger
 @require_auth
 @standard_headers_with_str_response
 def get_all():
@@ -18,6 +19,7 @@ def get_all():
 
 
 @piles_bp.route('/add', methods=['POST'])
+@logger
 @require_auth
 @standard_headers_with_str_response
 def insert_pile():
@@ -28,6 +30,7 @@ def insert_pile():
 
 
 @piles_bp.route('/update', methods=['POST'])
+@logger
 @require_auth
 @standard_headers_with_str_response
 def update_pile():
@@ -39,6 +42,7 @@ def update_pile():
 
 
 @piles_bp.route('/delete', methods=['POST'])
+@logger
 @require_auth
 @standard_headers_with_str_response
 def delete_pile():

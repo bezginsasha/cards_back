@@ -8,7 +8,7 @@ cards_collection = db.cards
 
 def register(username, password):
     found_users = cards_collection.find({'username': username})
-    if found_users.count() == 0:
+    if not found_users.count():
         cards_collection.insert_one({
             'username': username,
             'password': generate_password_hash(password),
@@ -22,7 +22,7 @@ def login(username, password):
         'username': username,
         'password': {'$exists': True},
     })
-    if found_user_cursor.count() == 0:
+    if not found_user_cursor.count():
         return AUTH_RESULT['username_not_found']
 
     found_user = list(found_user_cursor)[0]

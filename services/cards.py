@@ -47,10 +47,12 @@ def update_card(id, original_word, translated_word):
         }
     }
     cards_collection.update_one(id, card)
+    return {'result': 'ok'}
 
 
 def delete_card(id):
     cards_collection.delete_one({'_id': ObjectId(id)})
+    return {'result': 'ok'}
 
 
 def move_card_to_pile(card_id, pile_name):
@@ -60,3 +62,4 @@ def move_card_to_pile(card_id, pile_name):
             '$set': {'pile_name': pile_name},
         }
     )
+    return {'result': 'ok'}

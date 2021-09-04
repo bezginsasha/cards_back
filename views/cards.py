@@ -36,8 +36,8 @@ def add_card():
 @standard_headers_with_str_response
 def delete_card():
     card_id = request.form['id']
-    cards_service.delete_card(card_id)
-    return json_util.dumps({'result': 'ok'})
+    delete_card_result = cards_service.delete_card(card_id)
+    return json_util.dumps(delete_card_result)
 
 
 @cards_bp.route('/update', methods=['POST'])
@@ -45,12 +45,12 @@ def delete_card():
 @require_auth
 @standard_headers_with_str_response
 def update_card():
-    cards_service.update_card(
+    update_card_result = cards_service.update_card(
         request.form['id'],
         request.form[camelize('original_word')],
         request.form[camelize('translated_word')],
     )
-    return json_util.dumps({'result': 'ok'})
+    return json_util.dumps(update_card_result)
 
 
 @cards_bp.route('/move', methods=['POST'])
@@ -60,5 +60,5 @@ def update_card():
 def move_card_to_pile():
     card_id = request.form[camelize('card_id')]
     pile_name = request.form[camelize('pile_name')]
-    cards_service.move_card_to_pile(card_id, pile_name)
-    return json_util.dumps({'result': 'ok'})
+    move_card_result = cards_service.move_card_to_pile(card_id, pile_name)
+    return json_util.dumps(move_card_result)

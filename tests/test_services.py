@@ -1,5 +1,5 @@
 from services import auth as auth_service
-from utils.constants import AUTH_RESULT
+from utils.constants import AUTH_RESULT, DB_OPERATION_RESULT
 from services import piles as piles_service
 from services import cards as cards_service
 
@@ -61,6 +61,14 @@ class TestCards:
             translated_word,
             username,
         )
+
+    def test_double_insert_the_same_card(self):
+        double_insert_card_result = cards_service.insert_card(
+            original_word,
+            translated_word,
+            username,
+        )
+        assert double_insert_card_result['result'] == DB_OPERATION_RESULT['already_exists']
 
     def test_update_card(self):
         self.id_of_second_inserted_card = cards_service.insert_card(

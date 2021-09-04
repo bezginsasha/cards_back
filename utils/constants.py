@@ -4,3 +4,8 @@ AUTH_RESULT = {
     'username_not_found': 'username not found',
     'password_incorrect': 'password incorrect',
 }
+
+DB_OPERATION_RESULT = {
+    'ok': 'ok',
+    'already_exists': 'already_exists'
+}

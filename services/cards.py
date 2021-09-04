@@ -1,6 +1,7 @@
 from bson.objectid import ObjectId
 
 from db import db
+from utils.constants import DB_OPERATION_RESULT
 
 cards_collection = db.cards
 
@@ -28,6 +29,16 @@ def get_all_cards(username):
 
 
 def insert_card(original_word, translated_word, username):
+    found_card = cards_collection.find({
+        'original_word': original_word,
+        'translated_word': translated_word,
+        'username': username
+    })
+    print(found_card)
+    print(found_card.count())
+    if found_card.count():
+        return {'result': DB_OPERATION_RESULT['already_exists']}
+
     card = {
         'original_word': original_word,
         'translated_word': translated_word,

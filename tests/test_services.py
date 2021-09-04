@@ -44,6 +44,7 @@ class TestPiles:
     def test_get_all_piles(self):
         piles = piles_service.get_all_piles(username)
         assert piles[0] in(pile_name, 'default')
+        piles_service.delete_pile(pile_name, username)
 
 
 class TestCards:

@@ -95,3 +95,4 @@ class TestCards:
         )
         move_card_result = cards_service.move_card_to_pile(card_id, pile_name)
         assert move_card_result['result'] == 'ok'
+        cards_service.delete_card(card_id)

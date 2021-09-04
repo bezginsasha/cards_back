@@ -1,4 +1,5 @@
 from db import db
+from utils.constants import DB_OPERATION_RESULT
 
 cards_collection = db.cards
 
@@ -11,6 +12,13 @@ def get_all_piles(username):
 
 
 def insert_pile(pile_name, username):
+    found_pile = cards_collection.find({
+        'pile_name': pile_name,
+        'username': username,
+    })
+    if found_pile.count():
+        return {'result': DB_OPERATION_RESULT['already_exists']}
+
     cards_collection.insert_one({
         'pile_name': pile_name,
         'username': username,

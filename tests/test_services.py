@@ -1,10 +1,13 @@
 from services import auth as auth_service
 from utils.constants import AUTH_RESULT
 from services import piles as piles_service
+from services import cards as cards_service
 
 username = 'test_username'
 password = 'test_password'
 pile_name = 'test_pile'
+original_word = 'test_original_word'
+translated_word = 'test_translated_word'
 
 
 class TestAuth:
@@ -41,3 +44,54 @@ class TestPiles:
     def test_get_all_piles(self):
         piles = piles_service.get_all_piles(username)
         assert piles[0] in(pile_name, 'default')
+
+
+class TestCards:
+    original_word_for_second_insert = 'test_original_word_insert'
+    translated_word_for_second_insert = 'test_translated_word_insert'
+    original_word_for_update = 'test_original_word_update'
+    id_of_second_inserted_card = None
+
+    def test_insert_card(self):
+        """ Now i don't use assert there because
+        this method tests only is there exceptions while inserting or no
+        """
+        cards_service.insert_card(
+            original_word,
+            translated_word,
+            username,
+        )
+
+    def test_update_card(self):
+        self.id_of_second_inserted_card = cards_service.insert_card(
+            self.original_word_for_second_insert,
+            self.translated_word_for_second_insert,
+            username,
+        )
+        card_update_result = update_card_result = cards_service.update_card(
+            self.id_of_second_inserted_card,
+            self.original_word_for_update,
+            self.translated_word_for_second_insert,
+        )
+        assert card_update_result['result'] == 'ok'
+
+    def test_delete_card(self):
+        card_delete_result = cards_service.delete_card(self.id_of_second_inserted_card)
+        assert card_delete_result['result'] == 'ok'
+
+    def test_get_all_cards(self):
+        cards = cards_service.get_all_cards(username)
+        original_words = [card['original_word'] for card in cards]
+        translated_words = [card['translated_word'] for card in cards]
+
+        assert original_word in original_words
+        assert translated_word in translated_words
+
+    def test_move_card_to_pile(self):
+        card_id = cards_service.insert_card(
+            self.original_word_for_second_insert,
+            self.translated_word_for_second_insert,
+            username,
+        )
+        move_card_result = cards_service.move_card_to_pile(card_id, pile_name)
+        assert move_card_result['result'] == 'ok'

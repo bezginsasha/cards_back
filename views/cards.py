@@ -62,3 +62,14 @@ def move_card_to_pile():
     pile_name = request.form[camelize('pile_name')]
     move_card_result = cards_service.move_card_to_pile(card_id, pile_name)
     return json_util.dumps(move_card_result)
+
+
+@cards_bp.route('/import', methods=['POST'])
+@logger
+@require_auth
+@standard_headers_with_str_response
+def import_cards():
+    file = request.files['file']
+    username = request.cookies['username']
+    import_cards_result = cards_service.import_card(file, username)
+    return json_util.dumps(import_cards_result)

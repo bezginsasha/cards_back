@@ -2,6 +2,7 @@ from bson.objectid import ObjectId
 
 from db import db
 from utils.constants import DB_OPERATION_RESULT
+from utils import importing
 
 cards_collection = db.cards
 
@@ -73,4 +74,19 @@ def move_card_to_pile(card_id, pile_name):
             '$set': {'pile_name': pile_name},
         }
     )
+    return {'result': 'ok'}
+
+
+def import_card(file, username):
+    import_dir = importing.create_or_get_dir()
+    try:
+        file_name = importing.save_file(import_dir, file, username)
+    except importing.WrongFileExtensionError as err:
+        return {'result': str(err)}
+
+    # In structure excel of file - first column is original word
+    # and second column - translated word. Therefore i simply
+    # use row[0] and row[1]
+    for row in importing.iter_excel(import_dir, file_name):
+        insert_card(row[0], row[1], username)
     return {'result': 'ok'}

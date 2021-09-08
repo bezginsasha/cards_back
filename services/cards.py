@@ -29,13 +29,33 @@ def get_all_cards(username):
     return all_cards
 
 
-def insert_card(original_word, translated_word, username):
+def find_card_by_original_word(original_word, username):
     found_card = cards_collection.find({
         'original_word': original_word,
-        'translated_word': translated_word,
         'username': username
     })
     if found_card.count():
+        clear_card_item = get_clear_card_item(list(found_card)[0])
+        return clear_card_item
+    else:
+        return None
+
+
+def find_card_by_id(card_id):
+    found_card = cards_collection.find({'_id': ObjectId(card_id)})
+    if found_card.count():
+        clear_card_item = get_clear_card_item(list(found_card)[0])
+        return clear_card_item
+    else:
+        return None
+
+
+def insert_card(original_word, translated_word, username):
+    found_card = find_card_by_original_word(
+        original_word,
+        username
+    )
+    if found_card:
         return {'result': DB_OPERATION_RESULT['already_exists']}
 
     card = {
@@ -48,7 +68,17 @@ def insert_card(original_word, translated_word, username):
     return str(inserted_card.inserted_id)
 
 
-def update_card(id, original_word, translated_word):
+def update_card(id, original_word, translated_word, username):
+    found_card_by_original_word = find_card_by_original_word(
+        original_word,
+        username
+    )
+    found_card_by_id = find_card_by_id(id)
+
+    if (found_card_by_id['original_word'] != original_word
+            and found_card_by_original_word):
+        return {'result': DB_OPERATION_RESULT['already_exists']}
+
     id = {'_id': ObjectId(id)}
     card = {
         '$set': {

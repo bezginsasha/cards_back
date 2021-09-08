@@ -49,6 +49,7 @@ def update_card():
         request.form['id'],
         request.form[camelize('original_word')],
         request.form[camelize('translated_word')],
+        request.cookies['username'],
     )
     return json_util.dumps(update_card_result)
 

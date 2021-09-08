@@ -65,7 +65,11 @@ def insert_card(original_word, translated_word, username):
         'pile_name': 'default',
     }
     inserted_card = cards_collection.insert_one(card)
-    return str(inserted_card.inserted_id)
+
+    return {
+        'result': 'ok',
+        'id': str(inserted_card.inserted_id),
+    }
 
 
 def update_card(card_id, original_word, translated_word, username):

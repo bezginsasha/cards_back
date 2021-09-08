@@ -26,8 +26,8 @@ def add_card():
     original_word = request.form[camelize('original_word')]
     translated_word = request.form[camelize('translated_word')]
     username = request.cookies['username']
-    inserted_id = cards_service.insert_card(original_word, translated_word, username)
-    return json_util.dumps({'id': inserted_id})
+    insert_card_result = cards_service.insert_card(original_word, translated_word, username)
+    return json_util.dumps(insert_card_result)
 
 
 @cards_bp.route('/delete', methods=['POST'])

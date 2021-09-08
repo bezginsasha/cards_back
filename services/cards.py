@@ -35,8 +35,6 @@ def insert_card(original_word, translated_word, username):
         'translated_word': translated_word,
         'username': username
     })
-    print(found_card)
-    print(found_card.count())
     if found_card.count():
         return {'result': DB_OPERATION_RESULT['already_exists']}
 

@@ -68,30 +68,30 @@ def insert_card(original_word, translated_word, username):
     return str(inserted_card.inserted_id)
 
 
-def update_card(id, original_word, translated_word, username):
+def update_card(card_id, original_word, translated_word, username):
     found_card_by_original_word = find_card_by_original_word(
         original_word,
         username
     )
-    found_card_by_id = find_card_by_id(id)
+    found_card_by_id = find_card_by_id(card_id)
 
     if (found_card_by_id['original_word'] != original_word
             and found_card_by_original_word):
         return {'result': DB_OPERATION_RESULT['already_exists']}
 
-    id = {'_id': ObjectId(id)}
+    card_mongo_id = {'_id': ObjectId(card_id)}
     card = {
         '$set': {
             'original_word': original_word,
             'translated_word': translated_word,
         }
     }
-    cards_collection.update_one(id, card)
+    cards_collection.update_one(card_mongo_id, card)
     return {'result': 'ok'}
 
 
-def delete_card(id):
-    cards_collection.delete_one({'_id': ObjectId(id)})
+def delete_card(card_id):
+    cards_collection.delete_one({'_id': ObjectId(card_id)})
     return {'result': 'ok'}
 
 

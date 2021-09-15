@@ -2,10 +2,12 @@ from flask import Blueprint, request
 from bson import json_util
 from humps import camelize
 
-from services import cards as cards_service
+from services.cards import CardsService
 from utils.decorators import standard_headers_with_str_response, require_auth, logger
+from db import real_db
 
 cards_bp = Blueprint('cards', __name__, url_prefix='/api/cards')
+cards_service = CardsService(real_db)
 
 
 @cards_bp.route('/get_all', methods=['GET', 'POST'])

@@ -2,10 +2,12 @@ from flask import Blueprint, request
 from bson import json_util
 from humps import camelize
 
-from services import piles as piles_service
+from services.piles import PilesService
 from utils.decorators import standard_headers_with_str_response, require_auth, logger
+from db import real_db
 
 piles_bp = Blueprint('piles', __name__, url_prefix='/api/piles')
+piles_service = PilesService(real_db)
 
 
 @piles_bp.route('/get_all', methods=['GET'])

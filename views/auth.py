@@ -4,9 +4,11 @@ from flask import Response, Blueprint, request
 
 from utils.constants import AUTH_RESULT
 from utils.decorators import standard_headers_with_response_object, logger
-from services import auth as auth_service
+from services.auth import AuthService
+from db import real_db
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
+auth_service = AuthService(real_db)
 
 
 @auth_bp.route('/register', methods=('POST',))

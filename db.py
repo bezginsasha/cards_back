@@ -1,4 +1,5 @@
 from pymongo import MongoClient
 
 client = MongoClient()
-db = client.test
+real_db = client.cards_real
+test_db = client.cards_test

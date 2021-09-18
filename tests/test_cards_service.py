@@ -1,7 +1,12 @@
+from pathlib import Path
+
+from werkzeug.datastructures import FileStorage
+
 from services.cards import CardsService
 from db import test_db
 from tests import username, original_word, translated_word, pile_name
 from utils.constants import DB_OPERATION_RESULT
+from utils.importing import iter_excel
 
 cards_service = CardsService(test_db)
 
@@ -142,3 +147,29 @@ def test_move_card_to_pile():
     assert found_card['pile_name'] == pile_name
 
     cards_service.delete_card(card_id)
+
+
+def test_import_cards():
+    file_name = 'for_test_import.xlsx'
+    full_path = Path.cwd() / 'tests'
+    with open(full_path / file_name, 'rb') as f:
+        file = FileStorage(f)
+        import_cards_result = cards_service.import_card(
+            file,
+            username,
+        )
+        assert import_cards_result['result'] == 'ok'
+
+    for row in iter_excel(full_path, file_name):
+        original_word_row = row[0]
+        translated_word_row = row[1]
+
+        found_card = cards_service.find_card_by_original_word(
+            original_word_row,
+            username,
+        )
+
+        assert found_card['original_word'] == original_word_row
+        assert found_card['translated_word'] == translated_word_row
+
+        cards_service.delete_card(found_card['id'])

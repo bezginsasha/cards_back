@@ -5,7 +5,7 @@ from tests import pile_name, username
 piles_service = PilesService(test_db)
 
 
-def test_insert_and_pile():
+def test_insert_and_delete_pile():
     pile_insert_result = piles_service.insert_pile(
         pile_name,
         username,

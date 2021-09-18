@@ -27,8 +27,11 @@ def get_all():
 def insert_pile():
     pile_name = request.form[camelize('pile_name')]
     username = request.cookies['username']
-    piles_service.insert_pile(pile_name, username)
-    return json_util.dumps({'result': 'ok'})
+    pile_insert_result = piles_service.insert_pile(
+        pile_name,
+        username,
+    )
+    return json_util.dumps(pile_insert_result)
 
 
 @piles_bp.route('/update', methods=['POST'])
@@ -39,8 +42,12 @@ def update_pile():
     old_pile_name = request.form[camelize('old_pile_name')]
     new_pile_name = request.form[camelize('new_pile_name')]
     username = request.cookies['username']
-    piles_service.update_pile(old_pile_name, new_pile_name, username)
-    return json_util.dumps({'result': 'ok'})
+    update_pile_result = piles_service.update_pile(
+        old_pile_name,
+        new_pile_name,
+        username,
+    )
+    return json_util.dumps(update_pile_result)
 
 
 @piles_bp.route('/delete', methods=['POST'])
@@ -50,5 +57,8 @@ def update_pile():
 def delete_pile():
     pile_name = request.form[camelize('pile_name')]
     username = request.cookies['username']
-    piles_service.delete_pile(pile_name, username)
-    return json_util.dumps({'result': 'ok'})
+    delete_pile_result = piles_service.delete_pile(
+        pile_name,
+        username,
+    )
+    return json_util.dumps(delete_pile_result)

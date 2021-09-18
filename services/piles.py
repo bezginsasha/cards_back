@@ -11,12 +11,19 @@ class PilesService:
             {'username': username},
         )
 
-    def insert_pile(self, pile_name, username):
-        found_pile = self.collection.find({
+    def find_pile_by_name(self, pile_name, username):
+        found_pile_cursor = self.collection.find({
             'pile_name': pile_name,
             'username': username,
         })
-        if found_pile.count():
+        if found_pile_cursor.count():
+            return list(found_pile_cursor)[0]
+        else:
+            return None
+
+    def insert_pile(self, pile_name, username):
+        found_pile = self.find_pile_by_name(pile_name, username)
+        if found_pile:
             return {'result': DB_OPERATION_RESULT['already_exists']}
 
         self.collection.insert_one({
@@ -26,6 +33,10 @@ class PilesService:
         return {'result': 'ok'}
 
     def update_pile(self, old_pile_name, new_pile_name, username):
+        found_pile = self.find_pile_by_name(new_pile_name, username)
+        if found_pile:
+            return {'result': DB_OPERATION_RESULT['already_exists']}
+
         self.collection.update_many(
             {
                 'pile_name': old_pile_name,

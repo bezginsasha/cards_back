@@ -13,7 +13,7 @@ def test_insert_and_delete_card():
     insert_card_result = cards_service.insert_card(
         original_word,
         translated_word,
-        username
+        username,
     )
     assert insert_card_result['result'] == 'ok'
 
@@ -25,7 +25,7 @@ def test_insert_double_card():
     insert_card_result = cards_service.insert_card(
         original_word,
         translated_word,
-        username
+        username,
     )
     assert insert_card_result['result'] == 'ok'
     card_id = insert_card_result['id']
@@ -33,7 +33,7 @@ def test_insert_double_card():
     insert_card_result = cards_service.insert_card(
         original_word,
         translated_word,
-        username
+        username,
     )
     assert insert_card_result['result'] == DB_OPERATION_RESULT['already_exists']
     cards_service.delete_card(card_id)
@@ -43,7 +43,7 @@ def test_find_card_by_original_word_and_test_clear_card_item():
     insert_card_result = cards_service.insert_card(
         original_word,
         translated_word,
-        username
+        username,
     )
     assert insert_card_result['result'] == 'ok'
 
@@ -62,7 +62,7 @@ def test_find_card_by_id():
     insert_card_result = cards_service.insert_card(
         original_word,
         translated_word,
-        username
+        username,
     )
     assert insert_card_result['result'] == 'ok'
 
@@ -80,7 +80,7 @@ def test_update_card():
     insert_card_result = cards_service.insert_card(
         original_word,
         translated_word,
-        username
+        username,
     )
     assert insert_card_result['result'] == 'ok'
 
@@ -89,7 +89,7 @@ def test_update_card():
         card_id,
         second_original_word,
         second_translated_word,
-        username
+        username,
     )
     assert update_card_result['result'] == 'ok'
 
@@ -104,14 +104,14 @@ def test_update_card_with_existing_original_word():
     insert_card_result = cards_service.insert_card(
         original_word,
         translated_word,
-        username
+        username,
     )
     first_card_id = insert_card_result['id']
 
     insert_card_result = cards_service.insert_card(
         second_original_word,
         second_translated_word,
-        username
+        username,
     )
     second_card_id = insert_card_result['id']
 
@@ -119,7 +119,7 @@ def test_update_card_with_existing_original_word():
         second_card_id,
         original_word,
         translated_word,
-        username
+        username,
     )
     assert update_card_result['result'] == DB_OPERATION_RESULT['already_exists']
 
@@ -131,7 +131,7 @@ def test_move_card_to_pile():
     insert_card_result = cards_service.insert_card(
         original_word,
         translated_word,
-        username
+        username,
     )
     card_id = insert_card_result['id']
 

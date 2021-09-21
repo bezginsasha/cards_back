@@ -5,8 +5,8 @@ from werkzeug.datastructures import FileStorage
 from services.cards import CardsService
 from db import test_db
 from tests import username, original_word, translated_word, pile_name
-from utils.constants import DB_OPERATION_RESULT
 from utils.importing import iter_excel
+from utils.exceptions import AlreadyExistsError
 
 cards_service = CardsService(test_db)
 
@@ -15,42 +15,39 @@ second_translated_word = 'translated_word_2'
 
 
 def test_insert_and_delete_card():
-    insert_card_result = cards_service.insert_card(
+    card_id = cards_service.insert_card(
         original_word,
         translated_word,
         username,
     )
-    assert insert_card_result['result'] == 'ok'
 
-    delete_card_result = cards_service.delete_card(insert_card_result['id'])
-    assert delete_card_result['result'] == 'ok'
+    cards_service.delete_card(card_id)
 
 
 def test_insert_double_card():
-    insert_card_result = cards_service.insert_card(
+    card_id = cards_service.insert_card(
         original_word,
         translated_word,
         username,
     )
-    assert insert_card_result['result'] == 'ok'
-    card_id = insert_card_result['id']
 
-    insert_card_result = cards_service.insert_card(
-        original_word,
-        translated_word,
-        username,
-    )
-    assert insert_card_result['result'] == DB_OPERATION_RESULT['already_exists']
+    try:
+        cards_service.insert_card(
+            original_word,
+            translated_word,
+            username,
+        )
+    except AlreadyExistsError:
+        pass
     cards_service.delete_card(card_id)
 
 
 def test_find_card_by_original_word_and_test_clear_card_item():
-    insert_card_result = cards_service.insert_card(
+    card_id = cards_service.insert_card(
         original_word,
         translated_word,
         username,
     )
-    assert insert_card_result['result'] == 'ok'
 
     found_card = cards_service.find_card_by_original_word(original_word, username)
     assert found_card['username'] == username
@@ -60,18 +57,16 @@ def test_find_card_by_original_word_and_test_clear_card_item():
     assert 'id' in found_card
     assert '_id' not in found_card
 
-    cards_service.delete_card(insert_card_result['id'])
+    cards_service.delete_card(card_id)
 
 
 def test_find_card_by_id():
-    insert_card_result = cards_service.insert_card(
+    card_id = cards_service.insert_card(
         original_word,
         translated_word,
         username,
     )
-    assert insert_card_result['result'] == 'ok'
 
-    card_id = insert_card_result['id']
     found_card = cards_service.find_card_by_id(card_id)
     assert found_card['id'] == card_id
     assert found_card['username'] == username
@@ -82,21 +77,18 @@ def test_find_card_by_id():
 
 
 def test_update_card():
-    insert_card_result = cards_service.insert_card(
+    card_id = cards_service.insert_card(
         original_word,
         translated_word,
         username,
     )
-    assert insert_card_result['result'] == 'ok'
 
-    card_id = insert_card_result['id']
-    update_card_result = cards_service.update_card(
+    cards_service.update_card(
         card_id,
         second_original_word,
         second_translated_word,
         username,
     )
-    assert update_card_result['result'] == 'ok'
 
     found_card = cards_service.find_card_by_id(card_id)
     assert found_card['original_word'] == second_original_word
@@ -106,42 +98,40 @@ def test_update_card():
 
 
 def test_update_card_with_existing_original_word():
-    insert_card_result = cards_service.insert_card(
+    first_card_id = cards_service.insert_card(
         original_word,
         translated_word,
         username,
     )
-    first_card_id = insert_card_result['id']
 
-    insert_card_result = cards_service.insert_card(
+    second_card_id = cards_service.insert_card(
         second_original_word,
         second_translated_word,
         username,
     )
-    second_card_id = insert_card_result['id']
 
-    update_card_result = cards_service.update_card(
-        second_card_id,
-        original_word,
-        translated_word,
-        username,
-    )
-    assert update_card_result['result'] == DB_OPERATION_RESULT['already_exists']
+    try:
+        cards_service.update_card(
+            second_card_id,
+            original_word,
+            translated_word,
+            username,
+        )
+    except AlreadyExistsError:
+        pass
 
     cards_service.delete_card(first_card_id)
     cards_service.delete_card(second_card_id)
 
 
 def test_move_card_to_pile():
-    insert_card_result = cards_service.insert_card(
+    card_id = cards_service.insert_card(
         original_word,
         translated_word,
         username,
     )
-    card_id = insert_card_result['id']
 
-    move_card_to_pile_result = cards_service.move_card_to_pile(card_id, pile_name)
-    assert move_card_to_pile_result['result'] == 'ok'
+    cards_service.move_card_to_pile(card_id, pile_name)
 
     found_card = cards_service.find_card_by_id(card_id)
     assert found_card['pile_name'] == pile_name
@@ -154,11 +144,10 @@ def test_import_cards():
     full_path = Path.cwd() / 'tests'
     with open(full_path / file_name, 'rb') as f:
         file = FileStorage(f)
-        import_cards_result = cards_service.import_card(
+        cards_service.import_card(
             file,
             username,
         )
-        assert import_cards_result['result'] == 'ok'
 
     for row in iter_excel(full_path, file_name):
         original_word_row = row[0]

@@ -1,4 +1,4 @@
-from utils.constants import DB_OPERATION_RESULT
+from utils.exceptions import AlreadyExistsError
 
 
 class PilesService:
@@ -24,18 +24,17 @@ class PilesService:
     def insert_pile(self, pile_name, username):
         found_pile = self.find_pile_by_name(pile_name, username)
         if found_pile:
-            return {'result': DB_OPERATION_RESULT['already_exists']}
+            raise AlreadyExistsError
 
         self.collection.insert_one({
             'pile_name': pile_name,
             'username': username,
         })
-        return {'result': 'ok'}
 
     def update_pile(self, old_pile_name, new_pile_name, username):
         found_pile = self.find_pile_by_name(new_pile_name, username)
         if found_pile:
-            return {'result': DB_OPERATION_RESULT['already_exists']}
+            raise AlreadyExistsError
 
         self.collection.update_many(
             {
@@ -48,7 +47,6 @@ class PilesService:
                 }
             }
         )
-        return {'result': 'ok'}
 
     def delete_pile(self, pile_name, username):
         self.collection.delete_one({
@@ -67,4 +65,3 @@ class PilesService:
                 }
             }
         )
-        return {'result': 'ok'}

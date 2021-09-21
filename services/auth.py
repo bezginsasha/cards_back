@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from utils.constants import AUTH_RESULT
+from utils.exceptions import AlreadyExistsError, IncorrectPasswordError, UsernameNotFoundError
 
 
 class AuthService:
@@ -14,8 +14,7 @@ class AuthService:
                 'username': username,
                 'password': generate_password_hash(password),
             })
-            return AUTH_RESULT['ok']
-        return AUTH_RESULT['username_exists']
+        raise AlreadyExistsError
 
     def login(self, username, password):
         found_user_cursor = self.collection.find({
@@ -23,10 +22,8 @@ class AuthService:
             'password': {'$exists': True},
         })
         if not found_user_cursor.count():
-            return AUTH_RESULT['username_not_found']
+            raise UsernameNotFoundError
 
         found_user = list(found_user_cursor)[0]
-        if check_password_hash(found_user['password'], password):
-            return AUTH_RESULT['ok']
-        else:
-            return AUTH_RESULT['password_incorrect']
+        if not check_password_hash(found_user['password'], password):
+            raise IncorrectPasswordError

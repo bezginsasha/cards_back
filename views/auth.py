@@ -2,8 +2,9 @@ import json
 
 from flask import Response, Blueprint, request
 
-from utils.constants import AUTH_RESULT
 from utils.decorators import standard_headers_with_response_object, logger
+from utils import responses
+from utils.exceptions import UsernameNotFoundError, IncorrectPasswordError, AlreadyExistsError
 from services.auth import AuthService
 from db import real_db
 
@@ -17,11 +18,13 @@ auth_service = AuthService(real_db)
 def register():
     username = request.form['username']
     password = request.form['password']
-    register_result = auth_service.register(username, password)
+    try:
+        auth_service.register(username, password)
+    except AlreadyExistsError:
+        return Response(json.dumps(responses.already_exists))
 
-    resp = Response(json.dumps({'result': register_result}))
-    if register_result == AUTH_RESULT['ok']:
-        set_username_cookie(resp, username)
+    resp = Response(json.dumps(responses.ok))
+    set_username_cookie(resp, username)
     return resp
 
 
@@ -31,11 +34,15 @@ def register():
 def login():
     username = request.form['username']
     password = request.form['password']
-    login_result = auth_service.login(username, password)
+    try:
+        auth_service.login(username, password)
+    except UsernameNotFoundError:
+        return Response(json.dumps(responses.username_not_found))
+    except IncorrectPasswordError:
+        return Response(json.dumps(responses.incorrect_password))
 
-    resp = Response(json.dumps({'result': login_result}))
-    if login_result == AUTH_RESULT['ok']:
-        set_username_cookie(resp, username)
+    resp = Response(json.dumps(responses.ok))
+    set_username_cookie(resp, username)
     return resp
 
 

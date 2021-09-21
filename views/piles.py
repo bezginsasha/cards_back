@@ -4,6 +4,8 @@ from humps import camelize
 
 from services.piles import PilesService
 from utils.decorators import standard_headers_with_str_response, require_auth, logger
+from utils import responses
+from utils.exceptions import AlreadyExistsError, IncorrectPasswordError, UsernameNotFoundError
 from db import real_db
 
 piles_bp = Blueprint('piles', __name__, url_prefix='/api/piles')
@@ -27,11 +29,14 @@ def get_all():
 def insert_pile():
     pile_name = request.form[camelize('pile_name')]
     username = request.cookies['username']
-    pile_insert_result = piles_service.insert_pile(
-        pile_name,
-        username,
-    )
-    return json_util.dumps(pile_insert_result)
+    try:
+        piles_service.insert_pile(
+            pile_name,
+            username,
+        )
+    except AlreadyExistsError:
+        return json_util.dumps(responses.already_exists)
+    return json_util.dumps(responses.ok)
 
 
 @piles_bp.route('/update', methods=['POST'])
@@ -42,12 +47,15 @@ def update_pile():
     old_pile_name = request.form[camelize('old_pile_name')]
     new_pile_name = request.form[camelize('new_pile_name')]
     username = request.cookies['username']
-    update_pile_result = piles_service.update_pile(
-        old_pile_name,
-        new_pile_name,
-        username,
-    )
-    return json_util.dumps(update_pile_result)
+    try:
+        piles_service.update_pile(
+            old_pile_name,
+            new_pile_name,
+            username,
+        )
+    except AlreadyExistsError:
+        return json_util.dumps(responses.already_exists)
+    return json_util.dumps(responses.ok)
 
 
 @piles_bp.route('/delete', methods=['POST'])
@@ -57,8 +65,8 @@ def update_pile():
 def delete_pile():
     pile_name = request.form[camelize('pile_name')]
     username = request.cookies['username']
-    delete_pile_result = piles_service.delete_pile(
+    piles_service.delete_pile(
         pile_name,
         username,
     )
-    return json_util.dumps(delete_pile_result)
+    return json_util.dumps(responses.ok)

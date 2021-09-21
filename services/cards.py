@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
 
-from utils.constants import DB_OPERATION_RESULT
+from utils.exceptions import AlreadyExistsError
 from utils import importing
 
 
@@ -54,7 +54,7 @@ class CardsService:
             username
         )
         if found_card:
-            return {'result': DB_OPERATION_RESULT['already_exists']}
+            raise AlreadyExistsError
 
         card = {
             'original_word': original_word,
@@ -64,10 +64,7 @@ class CardsService:
         }
         inserted_card = self.collection.insert_one(card)
 
-        return {
-            'result': 'ok',
-            'id': str(inserted_card.inserted_id),
-        }
+        return str(inserted_card.inserted_id)
 
     def update_card(self, card_id, original_word, translated_word, username):
         found_card_by_original_word = self.find_card_by_original_word(
@@ -78,7 +75,7 @@ class CardsService:
 
         if (found_card_by_id['original_word'] != original_word
                 and found_card_by_original_word):
-            return {'result': DB_OPERATION_RESULT['already_exists']}
+            raise AlreadyExistsError
 
         card_mongo_id = {'_id': ObjectId(card_id)}
         card = {
@@ -88,11 +85,9 @@ class CardsService:
             }
         }
         self.collection.update_one(card_mongo_id, card)
-        return {'result': 'ok'}
 
     def delete_card(self, card_id):
         self.collection.delete_one({'_id': ObjectId(card_id)})
-        return {'result': 'ok'}
 
     def move_card_to_pile(self, card_id, pile_name):
         self.collection.update_one(
@@ -101,7 +96,6 @@ class CardsService:
                 '$set': {'pile_name': pile_name},
             }
         )
-        return {'result': 'ok'}
 
     def import_card(self, file, username):
         import_dir = importing.create_or_get_dir()
@@ -115,4 +109,3 @@ class CardsService:
         # use row[0] and row[1]
         for row in importing.iter_excel(import_dir, file_name):
             self.insert_card(row[0], row[1], username)
-        return {'result': 'ok'}
